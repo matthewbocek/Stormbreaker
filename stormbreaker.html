@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<head>
+	<style type="text/css">
+		#wrapper {
+			margin: 0 auto;
+			width:850px;
+			height:650px;
+		}
+		#canvas {
+			borders: 1px solid black;
+			background-color:#fff;
+		}
+		body{
+			background-color: #1c1c1c;
+		}
+	</style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="Sprite.js"></script>
+	<script src="Border.js"></script>
+	
+</head>
+<body>
+	<div id="wrapper">
+		<canvas id="canvas" width="850" height="650"></canvas>
+	</div>
+	
+	<script>		
+		var canvas = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+		var mousePos = {};
+		
+		var sprites = [];
+		sprites.push( new Ball(canvas.width/2,11,0.5,0.5) );
+		
+		var paddle = new Paddle();
+		sprites.push(paddle);
+		
+		$(canvas).on('mousemove', getMousePos);
+		$(document).on('click',function(){console.log('x:',mousePos.x,'y',mousePos.y)});
+		
+		animate(sprites,context);		
+		
+		function animate(sprites,context){			
+			context.clearRect(0,0,canvas.width,canvas.height);
+			
+			for(obj in sprites){
+				sprites[obj].update();
+				sprites[obj].checkWalls();
+				sprites[obj].draw(context);
+			}
+			setTimeout(function(){ animate(sprites,context) },1);
+		}
+		
+		function getMousePos(event){
+			mousePos.x = event.pageX - $('#canvas').offset().left;
+			mousePos.y = event.pageY - $('#canvas').offset().top;
+		}
+
+	</script>
+</body>
+</html>

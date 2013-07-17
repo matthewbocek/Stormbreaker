@@ -1,0 +1,54 @@
+var Sprite = function() {};
+Sprite.prototype = {
+  x: 0,
+  y: 0,
+  dx: 0, //horizontal speed
+  dy: 0, //vertical speed
+  isSprite:true,
+  update: function() {
+    //update with current "drift" momentum
+    this.x = this.x + this.dx;
+    tihs.y = this.y + this.dy;
+  },
+  draw: function() {}
+}
+
+var Asteroid = function(size, x, y) {
+  this.size = size || "large";
+  this.x = x || 0;
+  this.y = y || 0;
+  this.dx = Math.random() * 6 - 3;
+  this.dy = Math.random() * 6 - 3;
+}
+Asteroid.prototype = new Sprite();
+
+//Now we'll add new properties where Asteroids are not like Sprites
+//starting with its appearance.
+Asteroid.prototype.draw = function() {
+  canvasContext.beginPath();
+  canvasContext.arc(this.x, this.y, 20, 0, Math.PI * 2);
+  canvasContext.stroke();
+}
+
+//Here's a player ship as well
+var Ship = function(x, y) {
+  this.x = x || 0;
+  this.y = y || 0;
+  //the ship starts stationary, no need to set dx and dy
+}
+Ship.prototype = new Sprite();
+
+//Ships also look different from asteroids, so we'll replace draw()
+Ship.prototype.draw = function() {
+  canvasContext.beginPath();
+  canvasContext.moveTo(this.x, this.y - 10);
+  canvasContext.lineTo(this.x + 5, this.y + 10);
+  canvasContext.lineTo(this.x - 5, this.y + 10);
+  canvasContext.lineTo(this.x, this.y - 10);
+  canvasContext.stroke();
+}
+
+var a = new Asteroid("large",0,0);
+console.log(a.isSprite);
+</script>
+</body>
