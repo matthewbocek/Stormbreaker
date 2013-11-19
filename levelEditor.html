@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<head>
+	<style type="text/css">
+		#wrapper {
+			margin: 0 auto;
+			width:850px;
+			height:650px;
+		}
+		#canvas {
+			border: 1px solid black;
+			background-color:#fff;
+		}
+		body{
+			background-color: #1c1c1c;
+		}
+	</style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="Point.js"></script>
+    <script src="Sprite.js"></script>
+	<script src="Paddle.js"></script>
+    <script src="Border.js"></script>
+    <script src="Brick.js"></script>
+    <script src="Boundingbox.js"></script>
+    <script src="Layout.js"></script>
+    <script src="levelList.js"></script>
+	
+</head>
+<body>
+	<div id="wrapper">
+		<canvas id="canvas" width="850" height="650"></canvas>
+	</div>
+    
+    <div id="info" style="
+        position:absolute;
+        top:40px;
+        left:20px;
+        width:200px;
+        height:500px;
+        background-color:white;" >
+        <p>Color <br/>
+            <input type="color" id="color" />
+        </p>
+        <p>17 rows <br/>
+            19 columns
+        </p>
+        
+        <p><input id="pause" type="button" onclick="pause(100000000,1)" value="Pause" />
+        </p>
+        <p><input id="output" type="button" onclick="output(stationarySprites)" value="Output" />
+        </p>
+        <p id="readout">
+        
+        </p>
+        
+    </div>
+        
+	
+	<script>		
+
+        
+        var canvas = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+		var mousePos = {};
+        var carryOver = {lives:3,balls:1,level:1};
+
+		var animatedSprites = [];
+        var stationarySprites = [];
+		
+        /*
+        $.each(levels[1],function(){
+            stationarySprites.push( new Brick(this.x,this.y,this.param) );
+        });*/
+        
+        var ball = {}
+		var paddle = {};
+		
+        var rightWall = new Wall('y',850);
+        var leftWall = new Wall('y',0);
+        var topWall = new Wall('x',650);
+        var floor = new Wall('x',0);
+       
+        var gameSpeed = 1;
+        var brickColor = 'black';
+        //stationarySprites.push(rightWall,leftWall,topWall,floor);
+        
+		$(canvas).on('mousemove', getMousePos);
+        $(canvas).on('click', saveBrickLocation);
+        
+		animate(animatedSprites,stationarySprites,context);		
+		
+        function pause(speed,btnSpeed){
+            gameSpeed = speed;
+            $('#pause').attr("onclick","pause(" + btnSpeed + "," + speed + ")");
+            if ( $('#pause').attr("value") == "Pause" ) {
+                $('#pause').attr("value","Unpause");
+            }
+            else {
+                $('#pause').attr("value","Pause");
+            }
+            
+            animate(animatedSprites,stationarySprites,context);
+        }
+        
+		function animate(animatedSprites,stationarySprites,context){			
+			
+            context.clearRect(0,0,canvas.width,canvas.height);         
+            brickColor = ( $('#color').val() );
+            
+            
+            $.each(stationarySprites,function(){
+                this.draw(context);
+            });
+            
+			setTimeout(function(){ animate(animatedSprites,stationarySprites,context) },gameSpeed);
+		}
+		
+		function getMousePos(event){
+			mousePos.x = event.pageX - $('#canvas').offset().left;
+			mousePos.y = event.pageY - $('#canvas').offset().top;
+            
+            $('mousePosX').text(mousePos.X);
+            $('mousePosY').text(mousePos.Y);
+		}
+        
+        function updateInfo(paddle,ball){
+            $('#paddleX').text(paddle.x);
+            $('#paddleY').text(paddle.y);
+            $('#paddleSize').text(paddle.size);
+            
+            $('#ballX').text(ball.x);
+            $('#ballY').text(ball.y);
+            $('#ballDx').text(ball.dx);
+            $('#ballDy').text(ball.dy);
+            $('#ballAverage').text( ( Math.abs(ball.dx)+Math.abs(ball.dy) )/2 );
+
+        }
+        
+        function saveBrickLocation(event){
+            var aBrick = {};
+            var deleteABrick = false;
+            
+            aBrick.x = ( Math.floor( (event.pageX - $('#canvas').offset().left )/(50) ) ) * 50 ;
+            console.log(aBrick.x);
+            aBrick.y = ( Math.floor( (event.pageY - $('#canvas').offset().top )/(30) ) * 30 ) ;
+            console.log(aBrick.y);
+            console.log(aBrick.x*30);
+            console.log(aBrick.x + "," + aBrick.y + "," + brickColor);
+            
+            for(var i=0;i<stationarySprites.length;i++){
+                if (stationarySprites[i].x == aBrick.x  && stationarySprites[i].y == aBrick.y) {
+                    console.log('brick removed');
+                    stationarySprites.splice(i,1);
+                    return;
+                }
+            }
+                
+            console.log('brick added');
+            stationarySprites.push( new Brick(aBrick.x,aBrick.y,{'color':brickColor} ) );
+                
+        }
+        
+        function output(list){
+            var string = '';
+            
+            $.each(list,function(){
+                string += '{"x":' + this.x + ',"y":' + this.y + ',"param":{"color":' + '"' + this.color + '"}},';
+            });
+        
+            $('#readout').text(string);
+        }
+	</script>
+</body>
+</html>

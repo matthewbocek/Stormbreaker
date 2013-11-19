@@ -7,7 +7,7 @@
 			height:650px;
 		}
 		#canvas {
-			borders: 1px solid black;
+			border: 1px solid black;
 			background-color:#fff;
 		}
 		body{
@@ -15,46 +15,112 @@
 		}
 	</style>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	<script src="Sprite.js"></script>
-	<script src="Border.js"></script>
+	<script src="Point.js"></script>
+    <script src="Boundingbox.js"></script>
+    <script src="Sprite.js"></script>
+    <script src="Ball.js"></script>
+	<script src="Paddle.js"></script>
+    <script src="Border.js"></script>
+    <script src="Brick.js"></script>
+    <script src="Layout.js"></script>
+    <script src="Game.js"></script>
+    <script src="Lightning.js"></script>
+    <script src="levelList.js"></script>
+    <script src="Explosion.js"></script>
+    <!--<script src="Aura.js"></script>-->
+    
 	
 </head>
 <body>
 	<div id="wrapper">
 		<canvas id="canvas" width="850" height="650"></canvas>
 	</div>
+    
+    <div id="info" style="
+        position:absolute;
+        top:40px;
+        left:20px;
+        width:200px;
+        height:500px;
+        background-color:white;" >
+        <p>Paddle <br/>
+        X = <span id="paddleX"></span> <br/>
+        Y = <span id="paddleY"></span> <br/>
+        </p>
+        
+        <p>Ball <br/>
+            X = <span id="ballX"></span> <br/>
+            Y = <span id="ballY"></span> <br/>
+            dX = <span id="ballDx"></span> <br/>
+            dY = <span id="ballDy"></span> <br/>
+            Average = <span id="ballAverage"></span> <br/>
+        </p>
+        
+        <p>Bounce <br />
+            Speed Change = <span id="bounceSpeed"></span> <br/>
+            Angle of Reflection = <span id="bounceAngle"></span> <br/>
+        </p>
+        
+        
+        <p><input id="pause" type="button" onclick="game.togglePause()" value="Pause" />
+
+        </p>
+    </div>
+    
+    <canvas id="lightningMeter" style="
+        position: absolute;
+        top: 40px;
+        left: 1200px;
+        width:80px;
+        height:250px;
+        background-color: white;    ">
+        
+    </canvas>
+        
 	
-	<script>		
-		var canvas = document.getElementById('canvas');
+	<script>        
+        var canvas = document.getElementById('canvas');
 		var context = canvas.getContext('2d');
 		var mousePos = {};
-		
-		var sprites = [];
-		sprites.push( new Ball(canvas.width/2,11,0.5,0.5) );
-		
-		var paddle = new Paddle();
-		sprites.push(paddle);
-		
-		$(canvas).on('mousemove', getMousePos);
-		$(document).on('click',function(){console.log('x:',mousePos.x,'y',mousePos.y)});
-		
-		animate(sprites,context);		
-		
-		function animate(sprites,context){			
-			context.clearRect(0,0,canvas.width,canvas.height);
-			
-			for(obj in sprites){
-				sprites[obj].update();
-				sprites[obj].checkWalls();
-				sprites[obj].draw(context);
-			}
-			setTimeout(function(){ animate(sprites,context) },1);
-		}
+        var game = new Game({"layoutList":stormBreakerLevels1});
+        
+        var lightning = new Lightning();
+        
+        //game.level.ball.makeAura(1000);
+        game.start(1,1);
+        
+        
+        
+		$(document).on('mousemove', getMousePos);
+        
+		//$(canvas).on('click',powerSlide);
 		
 		function getMousePos(event){
 			mousePos.x = event.pageX - $('#canvas').offset().left;
 			mousePos.y = event.pageY - $('#canvas').offset().top;
+            
+            $('mousePosX').text(mousePos.X);
+            $('mousePosY').text(mousePos.Y);
 		}
+        
+        function updateInfo(paddle,ball){
+            $('#paddleX').text(game.level.paddle.x);
+            $('#paddleY').text(game.level.paddle.y);
+            $('#paddleSize').text(game.level.paddle.size);
+            
+            $('#ballX').text(game.level.balls[0].x);
+            $('#ballY').text(game.level.balls[0].y);
+            $('#ballDx').text(game.level.balls[0].dx);
+            $('#ballDy').text(game.level.balls[0].dy);
+            $('#ballAverage').text( ( Math.abs(game.level.balls[0].dx)+Math.abs(game.level.balls[0].dy) )/2 );
+        }
+        
+        function circ(x,y){
+            context.beginPath();
+            context.strokeStyle = 'green';
+            context.strokeWidth = 3;
+            context.arc(x,y,2,0,2*Math.PI)
+        }
 
 	</script>
 </body>
