@@ -45,11 +45,19 @@ Game.prototype.togglePause = function(){
     console.log('pause')
     if(this.gameSpeed == this.speeds.paused){
         this.gameSpeed = this.speeds.unpaused;
+        $.each(timers,function(){
+            this.resume();
+        });
         this.level.animate(context);
+        console.log(timers);
     }
     else{
         this.gameSpeed = this.speeds.paused;
+        $.each(timers,function(){
+            this.pause();
+        });
         this.level.animate(context);
+        console.log(timers);
     }
 }
 

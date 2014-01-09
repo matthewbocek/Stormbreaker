@@ -91,17 +91,18 @@ Bolt.prototype.draw = function(){
     }
     else{
         this.isActive = true;
-        setTimeout(function(){ game.level.bolt.incrementActiveHeight(11); },1000);
+        timers.push( new Timer( function(){ game.level.bolt.incrementActiveHeight(11); },1000) );
     }
 }
 
 Bolt.prototype.incrementActiveHeight = function(heightIncrement){
     this.activeHeight += heightIncrement;
     if(this.activeHeight<canvas.height){
-        setTimeout(function(){ game.level.bolt.incrementActiveHeight(20); },1);
+        timers.push( new Timer( function(){ game.level.bolt.incrementActiveHeight(20); },1) );
     }
     else {
-        setTimeout(function(){ game.level.bolt = new Sprite(); },250);
+        timers.push( new Timer( function(){ game.level.bolt = new Sprite(); },250) );
+        console.log(timers);
     }
 }
 

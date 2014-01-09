@@ -62,7 +62,7 @@ Brick.prototype.collide = function(collisionType){
             if(!this.isVunerable){
                 this.isVulnerable = true;
                 //setTimeout(function(){game.level.vulnerablilityTimer},3000);//
-                //this.vulnerabilityTimer(3000);
+                this.vulnerabilityTimer(3000);
                 //test ^
             }
             break;
@@ -80,7 +80,7 @@ Brick.prototype.collide = function(collisionType){
 
 Brick.prototype.vulnerabilityTimer = function(time){
     var self = this;
-    setTimeout(function(){
+    timers.push( new Timer( function(){
         self.isVulnerable = false;
-    },time);
+    },time) );
 }

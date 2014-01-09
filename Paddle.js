@@ -144,12 +144,12 @@ Paddle.prototype.checkBoundingBox = function(mover){
 Paddle.prototype.frozenTimer = function(time){
 //TODO unifying different status timers functions is probably a good candidate for a closure.
     var self = this;
-    setTimeout(function(){
+    timers.push( new Timer( function(){
         self.isFrozen = false;
-    },time);
+    },time) );
 }
 
 Paddle.prototype.collisionTimer = function(){
     this.canCollide = false;
-    setTimeout(function(){ this.canCollide = true; },1000);
+    timers.push( new Timer( function(){ this.canCollide = true; },1000) );
 }

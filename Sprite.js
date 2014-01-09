@@ -15,6 +15,7 @@ Sprite.prototype = {
     collisionPoints: [], //todo this is another example of a value that could be stored in a function via closure (since it is only ever accessed by one function) and not clutter up the object's namespace, where it has no context or meaning.
     collide : function(target,point){ },
     defineCollisionPoints: function(){ },
+    incrementActiveHeight : function(){ }, //TODO this is here because Sprite is being used as a null object. A real null object should be created specifically for this purpose.
     makeBoundingBox: function(){ return new BoundingBox(0,0,0,0)},
     checkBoundingBox: function(mover){
         var intersect = {detected:false,type:''};

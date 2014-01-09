@@ -146,5 +146,6 @@ Layout.prototype.animate = function(context){
     
     this.update();
     
-    setTimeout( function(){ game.level.animate(context) }, game.gameSpeed );
+    timers.push( new Timer( function(){ game.level.animate(context) }, game.gameSpeed ) );
+    cleanTimers();
 }

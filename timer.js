@@ -4,16 +4,21 @@ var Timer = function(callback,delay){//taken from Tim Down @ http://stackoverflo
     this.callback = callback;
     this.startTime;
     this.id;
+    this.isPaused;
     
     this.pause = function(){
-        window.clearTimeout(timerId);
-        this.timeRemaining = this.timeRemaining - (new Date() - this.startTime)
+        this.isPaused = true;
+        
+        window.clearTimeout(this.id);
+        this.timeRemaining = this.timeRemaining - (new Date() - this.startTime);
     }
     
     this.resume = function(){
-        window.clearTimeout(timerId);
+        this.isPaused = false;
+        
+        window.clearTimeout(this.id);
         this.startTime = new Date();
-        this.id = window.setTimeout(callback,timeRemaining);
+        this.id = window.setTimeout(callback,this.timeRemaining);
     }
     
     this.resume();

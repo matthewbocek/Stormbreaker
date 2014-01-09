@@ -27,6 +27,7 @@
     <script src="Lightning.js"></script>
     <script src="levelList.js"></script>
     <script src="Explosion.js"></script>
+    <script src="Timer.js"></script>
     <!--<script src="Aura.js"></script>-->
     
 	
@@ -85,6 +86,7 @@
         var game = new Game({"layoutList":stormBreakerLevels1});
         
         var lightning = new Lightning();
+        var timers = [];
         
         //game.level.ball.makeAura(1000);
         game.start(1,1);
@@ -122,6 +124,15 @@
             context.arc(x,y,2,0,2*Math.PI)
         }
 
+        function cleanTimers(){
+            var d = new Date();
+            timers = $.grep(timers,function(){ 
+                if( d - this.start >= this.remaining && !this.isPaused){
+                    return true;
+                }
+            });
+        }
+        
 	</script>
 </body>
 </html>

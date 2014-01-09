@@ -1,5 +1,6 @@
 var Ball = function(x,y,dx,dy){
-	this.type = 'ball';
+    
+    this.type = 'ball';
 	this.x = x;
 	this.y = y;
 	this.dx = dx;
